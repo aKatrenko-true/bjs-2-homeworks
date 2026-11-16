@@ -1,4 +1,4 @@
-class AlarmClock {
+window.AlarmClock = class AlarmClock {
   constructor() {
     this.alarmCollection = [];
     this.intervalId = null;
@@ -6,20 +6,12 @@ class AlarmClock {
 
   addClock(time, callback) {
     if (!time || !callback) {
-      throw new Error('Отсутствуют обязательные аргументы');
-    }
-
-    const hasSameTime = this.alarmCollection.some(
-      (alarm) => alarm.time === time
-    );
-
-    if (hasSameTime) {
-      console.warn('Уже присутствует звонок на это же время');
+      throw new Error("Отсутствуют обязательные аргументы");
     }
 
     this.alarmCollection.push({
-      callback,
       time,
+      callback,
       canCall: true
     });
   }
@@ -55,8 +47,10 @@ class AlarmClock {
   }
 
   stop() {
-    clearInterval(this.intervalId);
-    this.intervalId = null;
+    if (this.intervalId !== null) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
   }
 
   resetAllCalls() {
@@ -69,4 +63,4 @@ class AlarmClock {
     this.stop();
     this.alarmCollection = [];
   }
-}
+};
