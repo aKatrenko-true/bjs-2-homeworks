@@ -13,10 +13,7 @@ function cachingDecoratorNew(func) {
 
     const result = func(...args);
 
-    cache.push({
-      hash,
-      value: result
-    });
+    cache.push({ hash, value: result });
 
     if (cache.length > 5) {
       cache.shift();
@@ -31,14 +28,14 @@ function cachingDecoratorNew(func) {
 
 // Задача № 2
 function debounceDecoratorNew(func, delay) {
-  let isFirstCall = true;
+  let hasExecutedFirstCall = false;
   let timeoutId = null;
 
   function wrapper(...args) {
     wrapper.allCount += 1;
 
-    if (isFirstCall) {
-      isFirstCall = false;
+    if (!hasExecutedFirstCall) {
+      hasExecutedFirstCall = true;
       wrapper.count += 1;
       func(...args);
       return;
