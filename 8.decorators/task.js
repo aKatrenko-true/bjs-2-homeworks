@@ -4,14 +4,15 @@ function cachingDecoratorNew(func) {
 
   function wrapper(...args) {
     const hash = md5(args);
-    const objectInCache = cache.find((item) => item.hash === hash);
+    const cachedItem = cache.find((item) => item.hash === hash);
 
-    if (objectInCache) {
-      console.log("Из кеша: " + objectInCache.value);
-      return "Из кеша: " + objectInCache.value;
+    if (cachedItem) {
+      console.log("Из кеша: " + cachedItem.value);
+      return "Из кеша: " + cachedItem.value;
     }
 
     const result = func(...args);
+
     cache.push({
       hash,
       value: result
@@ -30,17 +31,20 @@ function cachingDecoratorNew(func) {
 
 // Задача № 2
 function debounceDecoratorNew(func, delay) {
+  let isFirstCall = true;
   let timeoutId = null;
 
   function wrapper(...args) {
     wrapper.allCount += 1;
 
-    if (timeoutId === null) {
+    if (isFirstCall) {
+      isFirstCall = false;
       wrapper.count += 1;
       func(...args);
-    } else {
-      clearTimeout(timeoutId);
+      return;
     }
+
+    clearTimeout(timeoutId);
 
     timeoutId = setTimeout(() => {
       timeoutId = null;
